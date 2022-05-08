@@ -52,7 +52,7 @@ echo print_r($nomiPartiti);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grafici elezioni</title>
-    <link rel="stylesheet" href="./dist/output.css">
+    <link href="../style/output.css" rel="stylesheet">
 </head>
 
 <body>
@@ -93,12 +93,20 @@ echo print_r($nomiPartiti);
         const configPie = {
             type: "pie",
             data: dataPie,
-            options: {},
+            options: {
+                plugins: {
+                }
+            },
         };
 
         var chartBar = new Chart(document.getElementById("chartPie"), configPie);
     </script>
 
+
+    <div class="shadow-lg rounded-lg overflow-hidden w-1/3">
+        <div class="py-3 px-5 bg-gray-50">Numero voti per candidato</div>
+        <canvas class="p-10" id="chartPie"></canvas>
+    </div>
 
 
 </body>

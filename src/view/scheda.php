@@ -1,5 +1,6 @@
 <?php
 
+
 /*
 
 Da fare:
@@ -152,7 +153,7 @@ if(!isset($_POST['sceltaPartito'])){
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="/dist/output.css" rel="stylesheet">
+  <link href="../style/output.css" rel="stylesheet">
   <title>Scheda Elettorale</title>
 </head>
 
