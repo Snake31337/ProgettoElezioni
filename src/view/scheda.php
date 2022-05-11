@@ -41,7 +41,8 @@ if (!isset($_SESSION['PIN'])) { // Controllo se l'utente ha inserito il PIN dall
   $result = $conn->query($queryCheckVoto);
 
   if ($result->num_rows == 1) {  // Controllo se esiste già una scheda con un voto assegnato, se sì reindirizzo l'utente su pagina dove ci sono i dati
-    header("Location:data.php");
+    $_SESSION['errorMessage'] = "Errore: hai già votato";
+    header("Location:login.php");
     exit;
   }
 
@@ -138,9 +139,9 @@ if (isset($_POST['sceltaPartito'])) {  // Ottieni il dato di quale partito è st
   } else {
     echo "Errore nell'aggiornamento della tabella scheda";
   }
-} 
+}
 
-if(!isset($_POST['sceltaPartito'])){
+if (!isset($_POST['sceltaPartito'])) {
   echo "Non è stato scelto un partito";
 }
 ?>
@@ -160,9 +161,9 @@ if(!isset($_POST['sceltaPartito'])){
 <body>
   <?php
 
-  if (isset($_SESSION['errorMessage'])) {?>
+  if (isset($_SESSION['errorMessage'])) { ?>
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-      <strong class="font-bold"><?php echo $_SESSION['errorMessage']?></strong>
+      <strong class="font-bold"><?php echo $_SESSION['errorMessage'] ?></strong>
     </div>
 
   <?php
@@ -182,17 +183,23 @@ if(!isset($_POST['sceltaPartito'])){
   }*/
   //$conn->close();
   ?>
+  <div class="flex items-center bg-blue-500 text-white text-sm font-bold px-4 py-3" role="alert">
+    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+      <path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" />
+    </svg>
+    <p>Scegli il partito premendo il cerchietto sopra a sinistra del partito</p>
+  </div>
   <div class="gap-2 columns-xl">
-    <form action="./scheda.php" method="POST">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
       <?php
       if ($resultQueryPartito->num_rows > 0) {
         // output data of each row
         while ($rowQueryPartito = $resultQueryPartito->fetch_assoc()) {
           $codicePartito = $rowQueryPartito["CodicePartito"];
       ?>
-          <div class="flex flex-row p-6 rounded-lg shadow-lg bg-white max-w mb-2">
+          <div id="<?php echo $codicePartito ?>" class="flex flex-row p-6  shadow-lg bg-white max-w mb-2 border-solid border-3 border-blue-700 rounded-lg">
             <div class="form-check">
-              <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="sceltaPartito" value="<?php echo $codicePartito ?>">
+              <input onclick="coloraBordo(this)" class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="sceltaPartito" value="<?php echo $codicePartito ?>">
               <label class="form-check-label inline-block text-gray-800" for="sceltaPartito">
               </label>
             </div>
@@ -294,6 +301,7 @@ if(!isset($_POST['sceltaPartito'])){
     </form>
   </div>
 
+  <script src="../script/scheda.js"></script>
 
 </body>
 
