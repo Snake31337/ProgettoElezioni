@@ -40,10 +40,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     exit;
   }
 
-  /*if (isset($sesso) && isset($eta) && isset($seggio)) {
-    $query = "INSERT INTO scheda (CodiceSeggio) VALUES('$seggio') SELECT @@IDENTITY";
+  if (isset($sesso) && isset($eta) && isset($seggio)) {
+    $query = "INSERT INTO scheda (CodiceSeggio) VALUES('$seggio')";
 
-  }*/
+    if ($conn->query($query) === TRUE) {
+      $CodiceScheda = $conn->insert_id;
+      echo "New record created successfully. Last inserted ID is: " . $CodiceScheda;
+    } else {
+      $_SESSION["errorMessage"] = "Error: " . $query . "<br>" . $conn->error;
+      header("Location:nuovoElettore.php");
+      exit;
+    }
+
+    $query = "INSERT INTO elettore (Eta, Sesso, CodiceScheda) VALUES ($eta, '$sesso', $CodiceScheda)";
+
+    if ($conn->query($query) === TRUE) {
+      $PIN = $conn->insert_id;
+      echo "New record created successfully. Last inserted ID is: " . $PIN;
+    } else {
+      $_SESSION["errorMessage"] = "Error: " . $query . "<br>" . $conn->error;
+      header("Location:nuovoElettore.php");
+      exit;
+    }
+  }
 }
 
 
@@ -77,7 +96,7 @@ else {
     unset($_SESSION['errorMessage']);
   } ?>
   <div class="flex flex-row min-h-screen justify-center items-center">
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="./nuovoElettore.php" method="POST">
+    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
       <label class="block text-gray-700 text-sm font-bold mb-2" aling="left" for="sesso">
         Sesso:
       </label>
@@ -144,10 +163,22 @@ else {
         </button>
       </div>
       <div class="mb-4 mt-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="PIN">
-          PIN
-        </label>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="pin" type="password" placeholder="Inserisci il PIN">
+        <p class="block text-gray-700 text-sm font-bold mb-2">PIN</p>
+        <p><?php
+        if (isset($PIN))
+              echo $PIN;
+        ?>
+        </p>
+        
+      </div>
+      <div class="mb-4 mt-4">
+        <p class="block text-gray-700 text-sm font-bold mb-2">CodiceScheda</p>
+        <p><?php
+        if (isset($CodiceScheda))
+              echo $CodiceScheda;
+        ?>
+        </p>
+        
       </div>
     </form>
   </div>
