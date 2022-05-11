@@ -189,13 +189,14 @@ if (!isset($_POST['sceltaPartito'])) {
     </svg>
     <p>Scegli il partito premendo il cerchietto sopra a sinistra del partito</p>
   </div>
-  <div class="gap-2 columns-xl">
+  <div class="gap-2 columns-xl m-5">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
       <?php
       if ($resultQueryPartito->num_rows > 0) {
         // output data of each row
         while ($rowQueryPartito = $resultQueryPartito->fetch_assoc()) {
           $codicePartito = $rowQueryPartito["CodicePartito"];
+          $logoPath = $rowQueryPartito['Logo'];
       ?>
           <div id="<?php echo $codicePartito ?>" class="flex flex-row p-6  shadow-lg bg-white max-w mb-2 border-solid border-3 border-blue-700 rounded-lg">
             <div class="form-check">
@@ -203,7 +204,7 @@ if (!isset($_POST['sceltaPartito'])) {
               <label class="form-check-label inline-block text-gray-800" for="sceltaPartito">
               </label>
             </div>
-            <img class="object-scale-down w-32" src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Partito_comunista_logo.png" alt="">
+            <img class="object-scale-down w-32" src="../images/partiti/<?php echo $logoPath?>" alt="">
             <div class="ml-5">
               <h5 class="text-grey-900 text-xl leading-tight font-medium mb-2"><?php echo $rowQueryPartito["Nome"]; ?></h5>
               <div class="flex justify-center">

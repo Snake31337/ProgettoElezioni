@@ -70,7 +70,7 @@ if (isset($_POST['PIN'])) { // Controllo se il PIN è stato inserito dalla pagin
 
     ?>
     <div class="flex flex-row min-h-screen justify-center items-center">
-      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="./login.php" method="POST">
+      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="PIN">
             PIN
