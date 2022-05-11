@@ -10,6 +10,8 @@ Controlla se esiste già il voto delle preferenze e dei partiti
 
 Fare un errore quando l'utente non sceglie un partito
 
+Aggiungere opacity sul div con classe ml-5, riga 210 circa
+
 
 
 
@@ -198,7 +200,7 @@ if (!isset($_POST['sceltaPartito'])) {
           $codicePartito = $rowQueryPartito["CodicePartito"];
           $logoPath = $rowQueryPartito['Logo'];
       ?>
-          <div id="<?php echo $codicePartito ?>" class="flex flex-row p-6  shadow-lg bg-white max-w mb-2 border-solid border-3 border-blue-700 rounded-lg">
+          <div id="<?php echo $codicePartito ?>" class="flex flex-row p-6 shadow-lg bg-white max-w mb-2 rounded-lg border-2 border-gray-100 hover:border-blue-400">
             <div class="form-check">
               <input onclick="coloraBordo(this)" class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="sceltaPartito" value="<?php echo $codicePartito ?>">
               <label class="form-check-label inline-block text-gray-800" for="sceltaPartito">
