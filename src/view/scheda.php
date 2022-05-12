@@ -9,12 +9,6 @@ Controlla se esiste già il voto delle preferenze e dei partiti
   * controllo partiti già fatto riga 40
 
 Fare un errore quando l'utente non sceglie un partito
-
-Aggiungere opacity sul div con classe ml-5, riga 210 circa
-
-
-
-
 */
 
 session_start();
@@ -192,7 +186,7 @@ if (!isset($_POST['sceltaPartito'])) {
     <p>Scegli il partito premendo il cerchietto sopra a sinistra del partito</p>
   </div>
   <div class="gap-2 columns-xl m-5">
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
       <?php
       if ($resultQueryPartito->num_rows > 0) {
         // output data of each row
@@ -206,12 +200,13 @@ if (!isset($_POST['sceltaPartito'])) {
               <label class="form-check-label inline-block text-gray-800" for="sceltaPartito">
               </label>
             </div>
-            <img class="object-scale-down w-32" src="../images/partiti/<?php echo $logoPath?>" alt="">
+            <img class="object-scale-down w-32" src="../images/partiti/<?php echo $logoPath ?>" alt="">
             <div class="ml-5">
               <h5 class="text-grey-900 text-xl leading-tight font-medium mb-2"><?php echo $rowQueryPartito["Nome"]; ?></h5>
-              <div class="flex justify-center">
-                <div class="mb-3 xl:w-96">
-                  <select name="pref1-<?php echo $codicePartito; ?>" class="form-select appearance-none
+              <div id="<?php echo 'selects-' . $codicePartito ?>" class="opacity-30 transition-opacity">
+                <div class="flex justify-center">
+                  <div class="mb-3 xl:w-96">
+                    <select name="pref1-<?php echo $codicePartito; ?>" class="form-select appearance-none
                   block
                   w-full
                   px-3
@@ -226,32 +221,32 @@ if (!isset($_POST['sceltaPartito'])) {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example">
-                    <option value="">Scegli la prima preferenza</option>
-                    <?php
-                    $queryCandidato = "SELECT CodiceCandidato, Nome, Cognome
+                      <option value="">Scegli la prima preferenza</option>
+                      <?php
+                      $queryCandidato = "SELECT CodiceCandidato, Nome, Cognome
                   FROM candidato
                   WHERE CodicePartito=$codicePartito";
-                    $resultQueryCandidato = $conn->query($queryCandidato);
-                    if ($resultQueryCandidato->num_rows > 0) {
-                      // output data of each row
-                      while ($rowQueryCandidato = $resultQueryCandidato->fetch_assoc()) {
+                      $resultQueryCandidato = $conn->query($queryCandidato);
+                      if ($resultQueryCandidato->num_rows > 0) {
+                        // output data of each row
+                        while ($rowQueryCandidato = $resultQueryCandidato->fetch_assoc()) {
 
-                        $codiceCandidato = $rowQueryCandidato["CodiceCandidato"];
-                    ?>
-                        <option value="<?php echo $codiceCandidato ?>"><?php echo $rowQueryCandidato["Nome"] . " " . $rowQueryCandidato["Cognome"] ?></option>
-                    <?php
+                          $codiceCandidato = $rowQueryCandidato["CodiceCandidato"];
+                      ?>
+                          <option value="<?php echo $codiceCandidato ?>"><?php echo $rowQueryCandidato["Nome"] . " " . $rowQueryCandidato["Cognome"] ?></option>
+                      <?php
+                        }
+                      } else {
+                        echo "0 results";
                       }
-                    } else {
-                      echo "0 results";
-                    }
 
-                    ?>
-                  </select>
+                      ?>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div class="flex justify-center">
-                <div class="mb-3 xl:w-96">
-                  <select name="pref2-<?php echo $codicePartito; ?>" class="form-select appearance-none
+                <div class="flex justify-center">
+                  <div class="mb-3 xl:w-96">
+                    <select name="pref2-<?php echo $codicePartito; ?>" class="form-select appearance-none
                   block
                   w-full
                   px-3
@@ -266,32 +261,33 @@ if (!isset($_POST['sceltaPartito'])) {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example">
-                    <option value="">Scegli la seconda preferenza</option>
-                    <?php
-                    $queryCandidato = "SELECT CodiceCandidato, Nome, Cognome
+                      <option value="">Scegli la seconda preferenza</option>
+                      <?php
+                      $queryCandidato = "SELECT CodiceCandidato, Nome, Cognome
                   FROM candidato
                   WHERE CodicePartito=$codicePartito";
-                    $resultQueryCandidato = $conn->query($queryCandidato);
-                    if ($resultQueryCandidato->num_rows > 0) {
-                      // output data of each row
-                      while ($rowQueryCandidato = $resultQueryCandidato->fetch_assoc()) {
+                      $resultQueryCandidato = $conn->query($queryCandidato);
+                      if ($resultQueryCandidato->num_rows > 0) {
+                        // output data of each row
+                        while ($rowQueryCandidato = $resultQueryCandidato->fetch_assoc()) {
 
-                        $codiceCandidato = $rowQueryCandidato["CodiceCandidato"];
-                    ?>
-                        <option value="<?php echo $codiceCandidato; ?>"> <?php echo $rowQueryCandidato["Nome"] . " " . $rowQueryCandidato["Cognome"] ?></option>
-                    <?php
+                          $codiceCandidato = $rowQueryCandidato["CodiceCandidato"];
+                      ?>
+                          <option value="<?php echo $codiceCandidato; ?>"> <?php echo $rowQueryCandidato["Nome"] . " " . $rowQueryCandidato["Cognome"] ?></option>
+                      <?php
+                        }
+                      } else {
+                        echo "0 results";
                       }
-                    } else {
-                      echo "0 results";
-                    }
 
-                    ?>
-                  </select>
+                      ?>
+                    </select>
+                  </div>
                 </div>
+                <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" type="submit">
+                  Invia
+                </button>
               </div>
-              <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" type="submit">
-                Invia
-              </button>
             </div>
           </div>
       <?php
