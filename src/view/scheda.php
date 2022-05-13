@@ -8,7 +8,7 @@ Da fare:
 Controlla se esiste già il voto delle preferenze e dei partiti
   * controllo partiti già fatto riga 40
 
-Fare un errore quando l'utente non sceglie un partito
+  mettere la data e ora a destra del codice scheda sul footer
 */
 
 session_start();
@@ -43,8 +43,6 @@ if (!isset($_SESSION['PIN'])) { // Controllo se l'utente ha inserito il PIN dall
     header("Location:login.php");
     exit;
   }
-
-  echo "CodiceScheda:" . $CodiceScheda;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -89,12 +87,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $preferenza2 = mysqli_real_escape_string($conn, $_POST['pref2-' . $codicePartito]); // CodiceCandidato preferenza 2
       $queryInsertPreferenza2 = "INSERT INTO vota (CodiceScheda, CodiceCandidato) VALUES ($CodiceScheda, $preferenza2)";
 
-      $queryCheckCandidato = "SELECT CodicePartito FROM candidato WHERE CodiceCandidato='$preferenza2'";   // Controllo se il candidato inserto appartiene al partito che è stato scelto
+      $queryCheckCandidato = "SELECT CodicePartito FROM candidato WHERE CodiceCandidato='$preferenza2'";   
       $result = $conn->query($queryCheckCandidato);
 
       if ($result->num_rows == 1) {
         while ($row = $result->fetch_assoc()) {
-          if ($row["CodicePartito"] != $codicePartito) {
+          if ($row["CodicePartito"] != $codicePartito) {  // Controllo se il candidato inserto appartiene al partito che è stato scelto
             $_SESSION['errorMessage'] = "Il secondo candidato inserito non appartiene al partito scelto";
             header("Location:scheda.php");  // Il candidato inserito non appartiene al partito scelto
             exit;
@@ -105,6 +103,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location:scheda.php"); // Non esiste il candidato scelto
         exit;
       }
+
+      /*$queryCheckPreferenza= "SELECT CodiceScheda, CodiceCandidato FROM vota WHERE CodiceScheda=$CodiceScheda";   // Controllo se la preferenza scelta esiste già nella tabella vota
+      $result = $conn->query($queryCheckPreferenza);
+
+      if ($result->num_rows == 1) {
+        while ($row = $result->fetch_assoc()) {
+          
+          
+        }
+      } else {
+        $_SESSION['errorMessage'] = "Non esiste il secondo candidato scelto";
+        header("Location:scheda.php"); // Non esiste il candidato scelto
+        exit;
+      }*/
 
       echo "<br>Preferenza2: " . $preferenza2;
     }
@@ -134,7 +146,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $querySetPartito = "UPDATE scheda SET CodicePartito = '$codicePartito' WHERE CodiceScheda = $CodiceScheda";
 
     if (mysqli_query($conn, $querySetPartito)) {
-      echo "Tabella scheda aggiornata correttamente";
+      $_SESSION['successo'] = true;
+      header("Location: login.php");
     } else {
       echo "Errore nell'aggiornamento della tabella scheda";
     }
@@ -189,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </svg>
     <p id="info">Scegli il partito premendo il cerchietto sopra a sinistra del partito</p>
   </div>
-  <div class="gap-2 columns-xl m-5">
+  <div class="gap-2 columns-xl m-5 mb-8">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
       <?php
       if ($resultQueryPartito->num_rows > 0) {
@@ -302,7 +315,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       ?>
     </form>
+    <div class="fixed bottom-0 left-0 bg-blue-500 w-full drop-shadow-md">
+      <p class="ml-5 text-white text-sm font-bold"><?php echo "CodiceScheda:" . $CodiceScheda;?></p>
+      <p class="right-0 ml-5 text-white text-sm font-bold"><?php echo date("d/m/Y"); ?></p>
   </div>
+  </div>
+
+  
 
   <script src="../script/scheda.js"></script>
 
