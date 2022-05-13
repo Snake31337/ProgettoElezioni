@@ -68,9 +68,26 @@ if (isset($_POST['PIN'])) { // Controllo se il PIN è stato inserito dalla pagin
       unset($_SESSION['errorMessage']);
     }
 
+    if (isset($_SESSION['successo']) && $_SESSION['successo']) { ?>
+      <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+        <div class="flex">
+          <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+            </svg></div>
+          <div>
+            <p class="font-bold">Il tuo voto è stato registrato correttamente</p>
+            <p class="text-sm">Per vedere i grafici delle votazioni <a href="./grafici.php" class="text-blue-700">clicca qui</a></p>
+          </div>
+        </div>
+      </div>
+
+    <?php
+      unset($_SESSION['errorMessage']);
+    }
+
     ?>
     <div class="flex flex-row min-h-screen justify-center items-center">
-      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
+      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="PIN">
             PIN
