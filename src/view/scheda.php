@@ -47,100 +47,102 @@ if (!isset($_SESSION['PIN'])) { // Controllo se l'utente ha inserito il PIN dall
   echo "CodiceScheda:" . $CodiceScheda;
 }
 
-if (isset($_POST['sceltaPartito'])) {  // Ottieni il dato di quale partito è stato scelto
-  $codicePartito = mysqli_real_escape_string($conn, $_POST['sceltaPartito']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (isset($_POST['sceltaPartito'])) {  // Ottieni il dato di quale partito è stato scelto
+    $codicePartito = mysqli_real_escape_string($conn, $_POST['sceltaPartito']);
 
-  echo "<br>CodicePartito: " . $codicePartito;
+    echo "<br>CodicePartito: " . $codicePartito;
 
-  $queryCheckPartito = "SELECT CodicePartito FROM partito WHERE CodicePartito='$codicePartito'"; // Controllo se esiste il partito scelto
-  $result = $conn->query($queryCheckPartito);
+    $queryCheckPartito = "SELECT CodicePartito FROM partito WHERE CodicePartito='$codicePartito'"; // Controllo se esiste il partito scelto
+    $result = $conn->query($queryCheckPartito);
 
-  if ($result->num_rows != 1) {
-    $_SESSION['errorMessage'] = "Il partito inserito non esiste";
+    if ($result->num_rows != 1) {
+      $_SESSION['errorMessage'] = "Il partito inserito non esiste";
+      header("Location:scheda.php");
+      exit;
+    }
+
+    if (isset($_POST['pref1-' . $codicePartito]) && !empty($_POST['pref1-' . $codicePartito])) { // Controllo se la prima preferenza è stata impostata e se non è di valore default
+      $preferenza1 = mysqli_real_escape_string($conn, $_POST['pref1-' . $codicePartito]); // CodiceCandidato preferenza 1
+      $queryInsertPreferenza1 = "INSERT INTO vota (CodiceScheda, CodiceCandidato) VALUES ($CodiceScheda, $preferenza1)";
+
+      $queryCheckCandidato = "SELECT CodicePartito FROM candidato WHERE CodiceCandidato='$preferenza1'";   // Controllo se il candidato inserto appartiene al partito che è stato scelto
+      $result = $conn->query($queryCheckCandidato);
+
+      if ($result->num_rows == 1) {
+        while ($row = $result->fetch_assoc()) {
+          if ($row["CodicePartito"] != $codicePartito) {
+            $_SESSION['errorMessage'] = "Il primo candidato inserito non appartiene al partito scelto";
+            header("Location:scheda.php");  // Il candidato inserito non appartiene al partito scelto
+            exit;
+          }
+        }
+      } else {
+        $_SESSION['errorMessage'] = "Non esiste il primo candidato scelto";
+        header("Location:scheda.php"); // Non esiste il candidato scelto
+        exit;
+      }
+
+      echo "<br>Preferenza 1: " . $preferenza1;
+    }
+    if (isset($_POST['pref2-' . $codicePartito]) && !empty($_POST['pref2-' . $codicePartito])) { // Controllo se la seconda preferenza è stata impostata e se non è di valore default
+      $preferenza2 = mysqli_real_escape_string($conn, $_POST['pref2-' . $codicePartito]); // CodiceCandidato preferenza 2
+      $queryInsertPreferenza2 = "INSERT INTO vota (CodiceScheda, CodiceCandidato) VALUES ($CodiceScheda, $preferenza2)";
+
+      $queryCheckCandidato = "SELECT CodicePartito FROM candidato WHERE CodiceCandidato='$preferenza2'";   // Controllo se il candidato inserto appartiene al partito che è stato scelto
+      $result = $conn->query($queryCheckCandidato);
+
+      if ($result->num_rows == 1) {
+        while ($row = $result->fetch_assoc()) {
+          if ($row["CodicePartito"] != $codicePartito) {
+            $_SESSION['errorMessage'] = "Il secondo candidato inserito non appartiene al partito scelto";
+            header("Location:scheda.php");  // Il candidato inserito non appartiene al partito scelto
+            exit;
+          }
+        }
+      } else {
+        $_SESSION['errorMessage'] = "Non esiste il secondo candidato scelto";
+        header("Location:scheda.php"); // Non esiste il candidato scelto
+        exit;
+      }
+
+      echo "<br>Preferenza2: " . $preferenza2;
+    }
+
+    if (isset($preferenza1) && isset($preferenza2) && ($preferenza1 == $preferenza2)) {  // Controllo se le preferenze sono state inserite e non sono vuote (valore default = "")
+      $_SESSION['errorMessage'] = "Non si possono inserire due preferenze uguali";
+      header("Location:scheda.php");  // Non si possono inserire due preferenze uguali
+      exit;
+    }
+
+    if (isset($preferenza1)) {
+      if (mysqli_query($conn, $queryInsertPreferenza1)) { // Inserisco nel database la prima preferenza
+        echo "Preferenza inserita correttamente";
+      } else {
+        echo "Non è stato possibile inserire la preferenza";
+      }
+    }
+
+    if (isset($preferenza2)) {
+      if (mysqli_query($conn, $queryInsertPreferenza2)) {   // Inserisco nel database la seconda preferenza
+        echo "Preferenza inserita correttamente";
+      } else {
+        echo "Non è stato possibile inserire la preferenza";
+      }
+    }
+
+    $querySetPartito = "UPDATE scheda SET CodicePartito = '$codicePartito' WHERE CodiceScheda = $CodiceScheda";
+
+    if (mysqli_query($conn, $querySetPartito)) {
+      echo "Tabella scheda aggiornata correttamente";
+    } else {
+      echo "Errore nell'aggiornamento della tabella scheda";
+    }
+  } else if (!isset($_POST['sceltaPartito'])) {
+    $_SESSION['errorMessage'] = "Non è stato scelto un partito";
     header("Location:scheda.php");
     exit;
   }
-
-  if (isset($_POST['pref1-' . $codicePartito]) && !empty($_POST['pref1-' . $codicePartito])) { // Controllo se la prima preferenza è stata impostata e se non è di valore default
-    $preferenza1 = mysqli_real_escape_string($conn, $_POST['pref1-' . $codicePartito]); // CodiceCandidato preferenza 1
-    $queryInsertPreferenza1 = "INSERT INTO vota (CodiceScheda, CodiceCandidato) VALUES ($CodiceScheda, $preferenza1)";
-
-    $queryCheckCandidato = "SELECT CodicePartito FROM candidato WHERE CodiceCandidato='$preferenza1'";   // Controllo se il candidato inserto appartiene al partito che è stato scelto
-    $result = $conn->query($queryCheckCandidato);
-
-    if ($result->num_rows == 1) {
-      while ($row = $result->fetch_assoc()) {
-        if ($row["CodicePartito"] != $codicePartito) {
-          $_SESSION['errorMessage'] = "Il primo candidato inserito non appartiene al partito scelto";
-          header("Location:scheda.php");  // Il candidato inserito non appartiene al partito scelto
-          exit;
-        }
-      }
-    } else {
-      $_SESSION['errorMessage'] = "Non esiste il primo candidato scelto";
-      header("Location:scheda.php"); // Non esiste il candidato scelto
-      exit;
-    }
-
-    echo "<br>Preferenza 1: " . $preferenza1;
-  }
-  if (isset($_POST['pref2-' . $codicePartito]) && !empty($_POST['pref2-' . $codicePartito])) { // Controllo se la seconda preferenza è stata impostata e se non è di valore default
-    $preferenza2 = mysqli_real_escape_string($conn, $_POST['pref2-' . $codicePartito]); // CodiceCandidato preferenza 2
-    $queryInsertPreferenza2 = "INSERT INTO vota (CodiceScheda, CodiceCandidato) VALUES ($CodiceScheda, $preferenza2)";
-
-    $queryCheckCandidato = "SELECT CodicePartito FROM candidato WHERE CodiceCandidato='$preferenza2'";   // Controllo se il candidato inserto appartiene al partito che è stato scelto
-    $result = $conn->query($queryCheckCandidato);
-
-    if ($result->num_rows == 1) {
-      while ($row = $result->fetch_assoc()) {
-        if ($row["CodicePartito"] != $codicePartito) {
-          $_SESSION['errorMessage'] = "Il secondo candidato inserito non appartiene al partito scelto";
-          header("Location:scheda.php");  // Il candidato inserito non appartiene al partito scelto
-          exit;
-        }
-      }
-    } else {
-      $_SESSION['errorMessage'] = "Non esiste il secondo candidato scelto";
-      header("Location:scheda.php"); // Non esiste il candidato scelto
-      exit;
-    }
-
-    echo "<br>Preferenza2: " . $preferenza2;
-  }
-
-  if (isset($preferenza1) && isset($preferenza2) && ($preferenza1 == $preferenza2)) {  // Controllo se le preferenze sono state inserite e non sono vuote (valore default = "")
-    $_SESSION['errorMessage'] = "Non si possono inserire due preferenze uguali";
-    header("Location:scheda.php");  // Non si possono inserire due preferenze uguali
-    exit;
-  }
-
-  if (isset($preferenza1)) {
-    if (mysqli_query($conn, $queryInsertPreferenza1)) { // Inserisco nel database la prima preferenza
-      echo "Preferenza inserita correttamente";
-    } else {
-      echo "Non è stato possibile inserire la preferenza";
-    }
-  }
-
-  if (isset($preferenza2)) {
-    if (mysqli_query($conn, $queryInsertPreferenza2)) {   // Inserisco nel database la seconda preferenza
-      echo "Preferenza inserita correttamente";
-    } else {
-      echo "Non è stato possibile inserire la preferenza";
-    }
-  }
-
-  $querySetPartito = "UPDATE scheda SET CodicePartito = '$codicePartito' WHERE CodiceScheda = $CodiceScheda";
-
-  if (mysqli_query($conn, $querySetPartito)) {
-    echo "Tabella scheda aggiornata correttamente";
-  } else {
-    echo "Errore nell'aggiornamento della tabella scheda";
-  }
-}
-
-if (!isset($_POST['sceltaPartito'])) {
-  echo "Non è stato scelto un partito";
 }
 ?>
 
