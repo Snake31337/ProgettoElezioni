@@ -2,7 +2,7 @@
 /*
 
 Da fare:
-
+    - aggiungere partitii senza voti nel grafico
 
     - grafico per i voti che i singoli candidati hanno ottenuto
  */
@@ -26,14 +26,14 @@ $result = $conn->query($queryDataElettore);
 
 $nomiPartiti = array();
 $codiciPartiti = array();
-$numeroVoti = array();
+$numeroVotiPartito = array();
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
 
         array_push($nomiPartiti, $row['Nome']);
         array_push($codiciPartiti, $row['CodicePartito']);
-        array_push($numeroVoti, $row['NumeroVoti']);
+        array_push($numeroVotiPartito, $row['NumeroVoti']);
     }
 } else {
     echo 'Nessun risultato trovato';
@@ -83,9 +83,9 @@ echo print_r($nomiPartiti);
         const dataPie = {
             labels: <?php echo json_encode($nomiPartiti) ?>, //["JavaScript", "Python", "Ruby"],
             datasets: [{
-                label: "My First Dataset",
-                data: <?php echo json_encode($numeroVoti) ?>, //[300, 50, 100],
-                backgroundColor: getRandomColor(<?php echo count($numeroVoti)?>),
+                label: "Numero voti per partito",
+                data: <?php echo json_encode($numeroVotiPartito) ?>, //[300, 50, 100],
+                backgroundColor: getRandomColor(<?php echo count($numeroVotiPartito) ?>),
                 hoverOffset: 4,
             }, ],
         };
@@ -94,8 +94,7 @@ echo print_r($nomiPartiti);
             type: "pie",
             data: dataPie,
             options: {
-                plugins: {
-                }
+                plugins: {}
             },
         };
 
@@ -103,10 +102,54 @@ echo print_r($nomiPartiti);
     </script>
 
 
-    <div class="shadow-lg rounded-lg overflow-hidden w-1/3">
+    <div class="shadow-lg rounded-lg overflow-hidden w-1/2">
         <div class="py-3 px-5 bg-gray-50">Numero voti per candidato</div>
-        <canvas class="p-10" id="chartPie"></canvas>
+        <canvas class="p-10" id="barChart"></canvas>
     </div>
+
+    <?php
+    $queryDataCandidato = "SELECT COUNT(*) AS NumeroVoti, Nome, Cognome, candidato.CodiceCandidato FROM candidato INNER JOIN vota ON candidato.CodiceCandidato = vota.CodiceCandidato GROUP BY candidato.CodiceCandidato";
+    $result = $conn->query($queryDataCandidato);
+    
+    $nomiCandidati = array();
+    $codiciCandidati = array();
+    $numeroVotiCandidato = array();
+    
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+    
+            array_push($nomiCandidati, $row['Nome'].' '.$row['Cognome']);
+            array_push($codiciCandidati, $row['CodiceCandidato']);
+            array_push($numeroVotiCandidato, $row['NumeroVoti']);
+        }
+    } else {
+        echo 'Nessun risultato trovato';
+    }
+
+    ?>
+
+    <script>
+        const labels = <?php echo json_encode($nomiCandidati)?>;
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Numero voti per candidato',
+                data: <?php echo json_encode($numeroVotiCandidato)?>,
+                backgroundColor: getRandomColor(<?php echo count($numeroVotiCandidato) ?>),
+                borderWidth: 1,
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                indexAxis: 'y',
+            },
+        };
+
+        var barChart = new Chart(document.getElementById("barChart"), config);
+    </script>
 
 
 </body>
