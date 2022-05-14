@@ -8,7 +8,7 @@ Da fare:
 
 
 
-
+setInterval(setData,1000);
 
 
 function formCheck(ele) {
@@ -20,7 +20,7 @@ function formCheck(ele) {
     togliOpacita(ele.value);
 
     info();
-    
+
     var card = document.getElementById(ele.value);
 
     card.classList.remove("border-gray-100");
@@ -32,8 +32,8 @@ function checkNotSelected() {  // La funzione cerca i div dei partiti che non so
 
     var radioButton = document.getElementsByName('sceltaPartito');
 
-    for(i = 0; i < radioButton.length; i++) {
-        if(!radioButton[i].checked) {
+    for (i = 0; i < radioButton.length; i++) {
+        if (!radioButton[i].checked) {
             var card = document.getElementById(radioButton[i].value);
 
             card.classList.remove("border-blue-500");
@@ -48,22 +48,22 @@ function checkNotSelected() {  // La funzione cerca i div dei partiti che non so
 }
 
 function togliOpacita(codicePartito) {
-    var select = document.getElementById('selects-'+codicePartito);
+    var select = document.getElementById('selects-' + codicePartito);
 
     select.classList.remove("opacity-30");
 }
 
 function aggiungiOpacita(codicePartito) {
-    var select = document.getElementById('selects-'+codicePartito);
+    var select = document.getElementById('selects-' + codicePartito);
 
     select.classList.add("opacity-30");
 }
 
 function disabilitaForm(codicePartito) {
-    var pref1 = document.getElementById('pref1-'+codicePartito);    // ottengo il select della prima preferenza
-    var pref2 = document.getElementById('pref2-'+codicePartito);    // ottengo il select della seconda preferenza
+    var pref1 = document.getElementById('pref1-' + codicePartito);    // ottengo il select della prima preferenza
+    var pref2 = document.getElementById('pref2-' + codicePartito);    // ottengo il select della seconda preferenza
 
-    var bottone = document.getElementById('btn-'+codicePartito);
+    var bottone = document.getElementById('btn-' + codicePartito);
 
     pref1.classList.add("cursor-not-allowed");  // modifico il cursore quando l'utente fa hover sulla pref1
     pref1.disabled = true;     // disabilito il select
@@ -76,10 +76,10 @@ function disabilitaForm(codicePartito) {
 }
 
 function attivaForm(codicePartito) {
-    var pref1 = document.getElementById('pref1-'+codicePartito);    // ottengo il select della prima preferenza
-    var pref2 = document.getElementById('pref2-'+codicePartito);    // ottengo il select della seconda preferenza
+    var pref1 = document.getElementById('pref1-' + codicePartito);    // ottengo il select della prima preferenza
+    var pref2 = document.getElementById('pref2-' + codicePartito);    // ottengo il select della seconda preferenza
 
-    var bottone = document.getElementById('btn-'+codicePartito);
+    var bottone = document.getElementById('btn-' + codicePartito);
 
     pref1.classList.remove("cursor-not-allowed");  // modifico il cursore quando l'utente fa hover sulla pref1
     pref1.disabled = false;     // disabilito il select
@@ -99,7 +99,18 @@ function info() {   // questa funzione modifica l'info box in cima alla pagina p
 }
 
 
+function setData() {
+    var spanOra = document.getElementById("oraEsatta");
+
+    let currentDate = new Date();
+    let time = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+
+    spanOra.innerHTML = time;
+}
 
 
+function checkPreferenze(codicePartito) {
+    
+}
 
 

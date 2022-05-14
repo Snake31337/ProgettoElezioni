@@ -315,15 +315,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       ?>
     </form>
-    <div class="fixed bottom-0 left-0 bg-blue-500 w-full drop-shadow-md">
-      <p class="ml-5 text-white text-sm font-bold"><?php echo "CodiceScheda:" . $CodiceScheda;?></p>
-      <p class="right-0 ml-5 text-white text-sm font-bold"><?php echo date("d/m/Y"); ?></p>
+    <div class="fixed bottom-0 left-0 bg-blue-400 w-full drop-shadow-md">
+      <p class="ml-5 text-white text-sm font-bold inline"><?php echo "CodiceScheda:" . $CodiceScheda;?></p>
+      <p class="float-right mr-5 text-white text-sm font-bold inline"><?php echo date("d/m/Y"); ?><span class="ml-3" id="oraEsatta"></span></p>
   </div>
   </div>
 
   
-
-  <script src="../script/scheda.js"></script>
+  
+  <script src="../script/scheda.js">
+  </script>
 
 </body>
 
