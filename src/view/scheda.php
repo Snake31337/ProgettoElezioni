@@ -7,8 +7,6 @@ Da fare:
 
 Controlla se esiste già il voto delle preferenze e dei partiti
   * controllo partiti già fatto riga 40
-
-  mettere la data e ora a destra del codice scheda sul footer
 */
 
 session_start();
@@ -223,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <div id="<?php echo 'selects-' . $codicePartito ?>" class="opacity-30 transition-opacity">
                 <div class="flex justify-center">
                   <div class="mb-3 xl:w-96">
-                    <select id="pref1-<?php echo $codicePartito; ?>" name="pref1-<?php echo $codicePartito; ?>" class="form-select appearance-none
+                    <select onInput="checkPreferenze(this, <?php echo $codicePartito?>)" id="pref1-<?php echo $codicePartito; ?>" name="pref1-<?php echo $codicePartito; ?>" class="form-select appearance-none
                   block
                   w-full
                   px-3
@@ -238,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none cursor-not-allowed" aria-label="Default select example" disabled>
-                      <option value="">Scegli la prima preferenza</option>
+                      <option value="">Nessuna preferenza</option>
                       <?php
                       $queryCandidato = "SELECT CodiceCandidato, Nome, Cognome
                   FROM candidato
@@ -263,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="flex justify-center">
                   <div class="mb-3 xl:w-96">
-                    <select id="pref2-<?php echo $codicePartito; ?>" name="pref2-<?php echo $codicePartito; ?>" class="form-select appearance-none
+                    <select onInput="checkPreferenze(this, <?php echo $codicePartito?>)" id="pref2-<?php echo $codicePartito; ?>" name="pref2-<?php echo $codicePartito; ?>" class="form-select appearance-none
                   block
                   w-full
                   px-3
@@ -278,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   ease-in-out
                   m-0
                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none cursor-not-allowed" aria-label="Default select example" disabled>
-                      <option value="">Scegli la seconda preferenza</option>
+                      <option value="">Nessuna preferenza</option>
                       <?php
                       $queryCandidato = "SELECT CodiceCandidato, Nome, Cognome
                   FROM candidato

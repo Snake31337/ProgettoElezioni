@@ -1,7 +1,7 @@
 /*
 Da fare: 
 
-- rimuovere il candidato scelto dall'altro select
+- fare il reset delle preferenze per risolvere il problema dell'inserimento di una preferenza a caso quando si cambia la scelta partito
 
 
 */
@@ -28,7 +28,7 @@ function formCheck(ele) {
     card.classList.remove("hover:border-blue-400");
 }
 
-function checkNotSelected() {  // La funzione cerca i div dei partiti che non sono spuntati, cancella la classe del bordo
+function checkNotSelected() {  // La funzione cerca i div dei partiti che non sono spuntati
 
     var radioButton = document.getElementsByName('sceltaPartito');
 
@@ -36,25 +36,27 @@ function checkNotSelected() {  // La funzione cerca i div dei partiti che non so
         if (!radioButton[i].checked) {
             var card = document.getElementById(radioButton[i].value);
 
-            card.classList.remove("border-blue-500");
-            card.classList.add("border-gray-100");
-            card.classList.add("hover:border-blue-400");
+            card.classList.remove("border-blue-500");   // Se il partito non è spuntato cancella il bordo
+            card.classList.add("border-gray-100");      // Viene rimesso il bordo di default
+            card.classList.add("hover:border-blue-400"); // Viene rimesso l'hover di default
 
             aggiungiOpacita(radioButton[i].value);
             disabilitaForm(radioButton[i].value);
+
+            //resetPreferenze(radioButton[i].value);
         }
     }
 
 }
 
-function togliOpacita(codicePartito) {
+function togliOpacita(codicePartito) {  // quando un partito viene selezionato si toglie l'opacità dal form per mostrarlo
     var select = document.getElementById('selects-' + codicePartito);
 
     select.classList.remove("opacity-30");
 }
 
 function aggiungiOpacita(codicePartito) {
-    var select = document.getElementById('selects-' + codicePartito);
+    var select = document.getElementById('selects-' + codicePartito);   // quando un partito non è selezionato è meno visibile
 
     select.classList.add("opacity-30");
 }
@@ -90,6 +92,8 @@ function attivaForm(codicePartito) {
     bottone.classList.remove("cursor-not-allowed");
     bottone.disabled = false;
 
+
+
 }
 
 function info() {   // questa funzione modifica l'info box in cima alla pagina per dare indicazioni all'utente
@@ -102,15 +106,93 @@ function info() {   // questa funzione modifica l'info box in cima alla pagina p
 function setData() {
     var spanOra = document.getElementById("oraEsatta");
 
-    let currentDate = new Date();
-    let time = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+    const d = new Date();
+    let h = addZero(d.getHours());
+    let m = addZero(d.getMinutes());
+    let s = addZero(d.getSeconds());
+    let time = h + ":" + m + ":" + s;
 
     spanOra.innerHTML = time;
 }
 
+function addZero(i) {
+    if (i < 10) {i = "0" + i}
+    return i;
+  }
 
-function checkPreferenze(codicePartito) {
-    
+
+/* function checkPreferenze(ele, codicePartito) {
+    var select1 = document.getElementById('pref1-' + codicePartito);    // ottengo il select della prima preferenza
+    var select2 = document.getElementById('pref2-' + codicePartito);    // ottengo il select della seconda preferenza
+
+    if (ele.id == 'pref1-' + codicePartito) {
+        var select = document.getElementById('pref2-' + codicePartito);
+    } else {
+        var select = document.getElementById('pref1' + codicePartito);
+    }
+
+    let pref1 = select1.value;  // prendo il codice del candidato della prima preferenza
+
+    select2.childNodes.forEach(element => { // controllo se nel secondo select esiste una opzione per quel candidato; se sì la cancello
+        if (element.value == pref1 && element.value !== "") {
+            element.remove();
+        }
+    });
+} */
+
+
+var pref1 = "";
+var pref2 = ""; 
+function checkPreferenze(ele, codicePartito) {  // ele è l'elemento da cui è stato inviata la richiesta
+
+    let numSelect = 0;
+    var select;
+
+    if (ele.id == 'pref1-' + codicePartito) {
+        console.log("Richiesta inviata dal primo select");
+        var select = document.getElementById('pref2-' + codicePartito); // se la richiesta è stata inviata dalla prima preferenza allora select = seconda preferenza
+        numSelect = 2; // Assegno un valore 1 per capire quale select sto modificando
+        
+        if(pref2 != "") {
+            //console.log("IF PREF2");
+            select.add(pref2);
+            pref2 = "";
+        }
+    } else {
+        console.log("Richiesta inviata dal secondo select");
+        var select = document.getElementById('pref1-' + codicePartito);  // se la richiesta è stata inviata dalla seconda preferenza allora select = prima preferenza
+        numSelect = 1;
+
+        if(pref1 != "") {
+            //console.log("IF PREF2");
+            select.add(pref1);
+            pref1 = "";
+        }
+    }
+
+    let preferenza = ele.value;  // valore della preferenza inserita dall'input (ele) = codiceCandidato
+
+    select.childNodes.forEach(element => { // controllo se nel select esiste una opzione per quel candidato; se sì la cancello
+        if (element.value == preferenza && element.value !== "") {
+            if(numSelect == 2) {
+                pref2 = element;
+                console.log("Elemento cancellato dal secondo select: ");
+                console.log(pref2);
+            } else if (numSelect == 1){
+                pref1 = element;
+                console.log("Elemento cancellato dal primo select: ");
+                console.log(pref1);
+            }
+            element.remove();
+        }
+    });
 }
 
+function resetPreferenze(codicePartito) {
+    let pref1 = document.getElementById("pref1-" + codicePartito);
+    let pref2 = document.getElementById("pref2-" + codicePartito);
+    
+    pref1.selected = false;
+    pref2.selected = false;
+}
 
