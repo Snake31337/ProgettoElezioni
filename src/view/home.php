@@ -55,14 +55,15 @@ if ($result->num_rows > 0) {
 <body>
     <nav class="flex bg-gray-100 h-20">
         <div class="ml-10 flex items-center w-4/5">
-            <a href="./home.php" class="text-2xl">Elezioni 2022</a>
+            <a href="./home.php" class="text-2xl font-semibold">Elezioni 2022</a>
         </div>
         <div class="flex justify-end items-center w-1/5 mr-10">
-            <a href="./login.php" class="text-lg">Login</a>
+            <a href="./login.php" class="text-lg mr-10 text-blue-700 hover:bg-blue-100">Login</a>
+            <a href="./nuovoElettore.php" class="text-lg text-blue-700 hover:bg-blue-100">Amministrazione</a>
         </div>
     </nav>
 
-    <div class="flex mt-5 justify-center">
+    <div class="flex mt-5 justify-center flex-wrap flex-row">
         <div class="shadow-lg rounded-lg overflow-hidden w-1/3 mr-3 bg-white">
             <div class="py-3 px-5 bg-gray-50">Numero voti per Partito</div>
             <canvas class="p-10" id="chartPie"></canvas>
