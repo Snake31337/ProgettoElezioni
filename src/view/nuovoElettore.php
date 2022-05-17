@@ -13,7 +13,6 @@ $conn = new mysqli($servername, $username, $password, $db_name);
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
-echo "Connected successfully";
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST')
@@ -26,6 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     exit;
   }
   if (isset($_POST['eta'])) {
+    if ($_POST['eta'] < 18) {
+      $_SESSION['errorMessage'] = "Hai inserito un elettore con età minore di 18 anni";
+      header("Location:nuovoElettore.php");
+      exit;
+    }
     $eta = mysqli_real_escape_string($conn, $_POST['eta']);
   } else {
     $_SESSION['errorMessage'] = "Attenzione! Non hai completato il form. Riprova";
@@ -84,7 +88,7 @@ else {
   <title>Crea nuovo elettore</title>
 </head>
 
-<body>
+<body style="background-image: url('../images/background.jpg');">
   <?php
 
   if (isset($_SESSION['errorMessage'])) { ?>
