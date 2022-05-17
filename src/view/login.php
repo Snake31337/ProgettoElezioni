@@ -99,6 +99,7 @@ if (isset($_POST['PIN'])) { // Controllo se il PIN è stato inserito dalla pagin
           <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
             Entra
           </button>
+          <a href="./home.php" class="text-sm text-blue-700">Torna indietro</a>
         </div>
       </form>
     </div>
