@@ -43,7 +43,7 @@ function checkNotSelected() {  // La funzione cerca i div dei partiti che non so
             aggiungiOpacita(radioButton[i].value);
             disabilitaForm(radioButton[i].value);
 
-            //resetPreferenze(radioButton[i].value);
+            resetPreferenze(radioButton[i].value);
         }
     }
 
@@ -189,10 +189,13 @@ function checkPreferenze(ele, codicePartito) {  // ele è l'elemento da cui è s
 }
 
 function resetPreferenze(codicePartito) {
-    let pref1 = document.getElementById("pref1-" + codicePartito);
-    let pref2 = document.getElementById("pref2-" + codicePartito);
-    
-    pref1.selected = false;
-    pref2.selected = false;
+    let select1 = document.getElementById("pref1-" + codicePartito);
+    let select2 = document.getElementById("pref2-" + codicePartito);
+
+    select1.value = "";
+    select2.value = "";
+
+    pref1 = "";
+    pref2 = "";
 }
 
