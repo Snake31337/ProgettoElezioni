@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $preferenza2 = mysqli_real_escape_string($conn, $_POST['pref2-' . $codicePartito]); // CodiceCandidato preferenza 2
       $queryInsertPreferenza2 = "INSERT INTO vota (CodiceScheda, CodiceCandidato) VALUES ($CodiceScheda, $preferenza2)";
 
-      $queryCheckCandidato = "SELECT CodicePartito FROM candidato WHERE CodiceCandidato='$preferenza2'";   
+      $queryCheckCandidato = "SELECT CodicePartito FROM candidato WHERE CodiceCandidato='$preferenza2'";
       $result = $conn->query($queryCheckCandidato);
 
       if ($result->num_rows == 1) {
@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Scheda Elettorale</title>
 </head>
 
-<body>
+<body style="background-image: url('../images/background.jpg');">
   <?php
 
   if (isset($_SESSION['errorMessage'])) { ?>
@@ -221,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <div id="<?php echo 'selects-' . $codicePartito ?>" class="opacity-30 transition-opacity">
                 <div class="flex justify-center">
                   <div class="mb-3 xl:w-96">
-                    <select onInput="checkPreferenze(this, <?php echo $codicePartito?>)" id="pref1-<?php echo $codicePartito; ?>" name="pref1-<?php echo $codicePartito; ?>" class="form-select appearance-none
+                    <select onInput="checkPreferenze(this, <?php echo $codicePartito ?>)" id="pref1-<?php echo $codicePartito; ?>" name="pref1-<?php echo $codicePartito; ?>" class="form-select appearance-none
                   block
                   w-full
                   px-3
@@ -261,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="flex justify-center">
                   <div class="mb-3 xl:w-96">
-                    <select onInput="checkPreferenze(this, <?php echo $codicePartito?>)" id="pref2-<?php echo $codicePartito; ?>" name="pref2-<?php echo $codicePartito; ?>" class="form-select appearance-none
+                    <select onInput="checkPreferenze(this, <?php echo $codicePartito ?>)" id="pref2-<?php echo $codicePartito; ?>" name="pref2-<?php echo $codicePartito; ?>" class="form-select appearance-none
                   block
                   w-full
                   px-3
@@ -314,13 +314,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       ?>
     </form>
     <div class="fixed bottom-0 left-0 bg-blue-400 w-full drop-shadow-md">
-      <p class="ml-5 text-white text-sm font-bold inline"><?php echo "CodiceScheda:" . $CodiceScheda;?></p>
-      <p class="float-right mr-5 text-white text-sm font-bold inline"><?php echo date("d/m/Y"); ?><span class="ml-3" id="oraEsatta"></span></p>
-  </div>
+      <p class="ml-5 text-white text-sm font-bold inline"><?php echo "CodiceScheda:" . $CodiceScheda; ?></p>
+
+      <div class="float-right table">
+        <p class="table-cell mr-5 text-white text-sm font-bold"><?php echo date("d/m/Y"); ?><span class="ml-3" id="oraEsatta"></span></p>
+        <a class="table-cell mr-5 text-white text-sm font-bold hover:bg-blue-500" href="./login.php">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Esci
+        </a>
+      </div>
+
+    </div>
   </div>
 
-  
-  
+
+
   <script src="../script/scheda.js">
   </script>
 
